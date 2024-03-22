@@ -1,4 +1,4 @@
-Description = "Initializ Distroless base image with buildpacks for Go, NodeJS, Python, Java, .NET Core, PHP, Ruby, Apache HTTPD, NGINX and Procfile"
+Description  = "Initializ Distroless base image with buildpacks for Go, NodeJS, Python, Java, .NET Core, PHP, Ruby, Apache HTTPD, NGINX and Procfile"
  
 [[buildpacks]]
   uri = "public.ecr.aws/initializ/buildpack/go@sha256:b362b2931939f45f76611f6bf1da147715583119267f0c9ce6773fc0d2fbb348"
