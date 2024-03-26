@@ -45,7 +45,8 @@ jobs:
           docker tag ${{ inputs.image }}:latest ${{ env.REGISTRY }}/${{ env.REPOSITORY }}:latest
           docker push ${{ env.REGISTRY }}/${{ env.REPOSITORY }}:latest
 
-      - uses: sigstore/cosign-installer@v1 # v3.1.2 is not available anymore, use the latest v1
+      - name: Install sigstore/cosign
+        uses: sigstore/cosign-installer@v1.3.3
 
       - name: Sign the images
         run: |
