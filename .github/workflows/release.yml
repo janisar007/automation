@@ -21,7 +21,7 @@ jobs:
     steps:
       - name: Git checkout
         uses: actions/checkout@v3
-        
+
       - name: Login to Docker Hub
         id: login-dockerhub
         uses: docker/login-action@v2
@@ -46,7 +46,9 @@ jobs:
           docker push ${{ env.REGISTRY }}/${{ env.REPOSITORY }}:latest
 
       - name: Install sigstore/cosign
-        uses: sigstore/cosign-installer@v1.3.3
+        uses: sigstore/cosign@main
+        with:
+          install: true
 
       - name: Sign the images
         run: |
