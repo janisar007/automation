@@ -9,6 +9,7 @@ contents:
     - wolfi-baselayout
     - tzdata
     - buildkitd
+    - busybox
     - curl
     - git
     - jq
