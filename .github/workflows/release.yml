@@ -6,10 +6,6 @@ on:
         required: true
         type: string
 
-permissions:
-  id-token: write  # This is required for GH OIDC connection
-  contents: read   # This is required for actions/checkout
-
 jobs:
   image-release:
     runs-on: ubuntu-latest
@@ -17,52 +13,35 @@ jobs:
       run:
         shell: bash
         working-directory: .
-
     steps:
       - name: Git checkout
         uses: actions/checkout@v3
 
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@11086d25041f77fe8fe7b9ea4e48e3b9192b8f19 # v3.1.2
+
       - name: Login to Docker Hub
-        id: login-dockerhub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Create & Push Minimal Image using apko
-        id: apko
-        uses: distroless/actions/apko-build@main
-        with:
-          config: images/${{ inputs.image }}/apko.yaml
-          tag: ${{ inputs.image }}:latest
-
-      - name: Tag, and push docker image to Docker Hub
-        env:
-          REGISTRY: docker.io
-          REPOSITORY: ${{ inputs.image }}
+      - name: Build and Push Docker Image
         run: |
-          docker load < output.tar
-          docker tag ${{ inputs.image }}:latest ${{ env.REGISTRY }}/${{ env.REPOSITORY }}:latest
-          docker push ${{ env.REGISTRY }}/${{ env.REPOSITORY }}:latest
-
-      - name: Install sigstore/cosign
-        uses: sigstore/cosign@main
-        with:
-          install: true
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/${{ inputs.image }}:latest .
+          docker push ${{ secrets.DOCKER_USERNAME }}/${{ inputs.image }}:latest
 
       - name: Sign the images
         run: |
           cosign sign \
-            --yes ${{ env.REGISTRY }}/${{ env.REPOSITORY }}:latest
+            --yes ${{ secrets.DOCKER_USERNAME }}/${{ inputs.image }}:latest
 
       - name: Verify the pushed tags
-        run: | 
+        run: |
           cosign verify \
-          ${{ env.REGISTRY }}/${{ env.REPOSITORY }}:latest \
-          --certificate-identity https://github.com/<USERNAME>/<REPO>/.github/workflows/release.yml@refs/heads/<BRANCH> \
-          --certificate-oidc-issuer https://token.actions.githubusercontent.com | jq
+            ${{ secrets.DOCKER_USERNAME }}/${{ inputs.image }}:latest | jq
 
       - name: Attest SBOM
         run: |
           cosign attest \
-            --yes --predicate sbom-x86_64.spdx.json --type spdxjson ${{ env.REGISTRY }}/${{ env.REPOSITORY }}:latest
+            --yes --predicate sbom-x86_64.spdx.json --type spdxjson ${{ secrets.DOCKER_USERNAME }}/${{ inputs.image }}:latest
