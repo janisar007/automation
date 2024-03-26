@@ -33,7 +33,7 @@ jobs:
         id: apko
         uses: distroless/actions/apko-build@main
         with:
-          config: images/initializbuildpacks/build-base/apko.yaml
+          config: initializbuildpacks/build-base/apko.yaml
           tag: build-base:latest
 
       # Replace the ECR Public push with Docker Hub push
