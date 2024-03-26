@@ -6,19 +6,17 @@ on:
         required: true
         type: string
 
+permissions:
+  id-token: write  # This is required for GH OIDC connection
+  contents: read   # This is required for actions/checkout
+
 jobs:
   image-release:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash
-        working-directory: .
+
     steps:
       - name: Git checkout
         uses: actions/checkout@v3
-
-      - name: Install Cosign
-        uses: sigstore/cosign-installer@11086d25041f77fe8fe7b9ea4e48e3b9192b8f19 # v3.1.2
 
       - name: Login to Docker Hub
         uses: docker/login-action@v2
@@ -26,22 +24,23 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build and Push Docker Image
-        run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/${{ inputs.image }}:latest .
-          docker push ${{ secrets.DOCKER_USERNAME }}/${{ inputs.image }}:latest
+      - name: Create & Push Minimal Image using apko
+        id: apko
+        uses: distroless/actions/apko-build@main
+        with:
+          config: images/${{ inputs.image }}/apko.yaml
+          tag: ${{ inputs.image }}:latest
 
-      - name: Sign the images
+      - name: Save Docker image to tar file
         run: |
-          cosign sign \
-            --yes ${{ secrets.DOCKER_USERNAME }}/${{ inputs.image }}:latest
+          docker save -o image.tar ${{ inputs.image }}:latest
 
-      - name: Verify the pushed tags
+      - name: Load Docker image from tar file
         run: |
-          cosign verify \
-            ${{ secrets.DOCKER_USERNAME }}/${{ inputs.image }}:latest | jq
+          docker load < image.tar
 
-      - name: Attest SBOM
+      - name: Tag and Push Docker image to ECR
         run: |
-          cosign attest \
-            --yes --predicate sbom-x86_64.spdx.json --type spdxjson ${{ secrets.DOCKER_USERNAME }}/${{ inputs.image }}:latest
+          $(aws ecr get-login --no-include-email)
+          docker tag ${{ inputs.image }}:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ inputs.image }}:latest
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ inputs.image }}:latest
