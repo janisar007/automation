@@ -13,13 +13,11 @@ jobs:
       - name: Git checkout
         uses: actions/checkout@v3
 
-      # Since you're no longer using AWS services, you can remove these steps
-
       - name: Create & Push Minimal Image using apko
         id: apko
         uses: distroless/actions/apko-build@main
         with:
-          config: images/${{ inputs.image }}/apko.yaml
+          config: build-base/apko.yaml  # Corrected path here
           tag: ${{ secrets.DOCKER_USERNAME }}/${{ inputs.image }}:latest
 
       - name: Login to Docker Hub
