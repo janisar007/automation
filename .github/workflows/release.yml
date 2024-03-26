@@ -34,7 +34,7 @@ jobs:
         uses: distroless/actions/apko-build@main
         with:
           config: initializbuildpacks/build-base/apko.yaml
-          tag: build-base:latest
+          tag: ${{ inputs.image }}:latest
 
       # Replace the ECR Public push with Docker Hub push
       - name: Push docker image to Docker Hub
@@ -43,7 +43,7 @@ jobs:
           REPOSITORY: ${{ inputs.image }}
         run: |
           docker load < output.tar
-          docker tag ${{ inputs.image }}:latest ${{ env.REGISTRY }}/${{ env.REPOSITORY }}:latest
+          docker tag build-base:${{ inputs.image }}-latest ${{ env.REGISTRY }}/${{ env.REPOSITORY }}:latest
           docker push ${{ env.REGISTRY }}/${{ env.REPOSITORY }}:latest
 
       # The rest of the workflow remains unchanged
