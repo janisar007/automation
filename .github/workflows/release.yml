@@ -28,26 +28,26 @@ jobs:
         uses: distroless/actions/apko-build@main
         with:
           config: initializbuildpacks/build-base/apko.yaml
-          tag: ${{ secrets.DOCKER_USERNAME }}/${{ inputs.image }}:latest
+          tag: initializbuildpacks/build-base:latest
 
       - name: Tag and push Docker image to Docker Hub
         run: |
-          docker push ${{ secrets.DOCKER_USERNAME }}/${{ inputs.image }}:latest
+          docker push initializbuildpacks/build-base:latest
 
       - uses: sigstore/cosign-installer@11086d25041f77fe8fe7b9ea4e48e3b9192b8f19 # v3.1.2
       - name: Sign the images
         run: |
           cosign sign \
-            --yes ${{ secrets.DOCKER_USERNAME }}/${{ inputs.image }}:latest
+            --yes initializbuildpacks/build-base:latest
 
       - name: Verify the pushed tags
         run: | 
           cosign verify \
-          ${{ secrets.DOCKER_USERNAME }}/${{ inputs.image }}:latest \
+          initializbuildpacks/build-base:latest \
           --certificate-identity https://github.com/initializ/secure-images/.github/workflows/release.yml@refs/heads/main \
           --certificate-oidc-issuer https://token.actions.githubusercontent.com | jq
 
       - name: Attest SBOM
         run: |
           cosign attest \
-            --yes --predicate sbom-x86_64.spdx.json --type spdxjson ${{ secrets.DOCKER_USERNAME }}/${{ inputs.image }}:latest
+            --yes --predicate sbom-x86_64.spdx.json --type spdxjson initializbuildpacks/build-base:latest
