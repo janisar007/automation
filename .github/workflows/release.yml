@@ -37,17 +37,21 @@ jobs:
         run: |
           docker push initializbuildpacks/$REPOSITORY:latest
 
-      - uses: sigstore/cosign-installer@11086d25041f77fe8fe7b9ea4e48e3b9192b8f19 # v3.1.2
+      - name: Install sigstore/cosign
+        uses: sigstore/cosign-installer@v3.1.2
 
       - name: Sign and push Docker image
         env:
           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
           REPOSITORY: ${{ inputs.image }}
         run: |
+          cosign sign --key github/workflows/release.yml@refs/heads/main \
+            --certificate-oidc-issuer https://token.actions.githubusercontent.com \
+            initializbuildpacks/$REPOSITORY:latest
           docker push initializbuildpacks/$REPOSITORY:latest
 
       - name: Verify the pushed tags
-        run: | 
+        run: |
           cosign verify \
           initializbuildpacks/${{ inputs.image }}:latest \
           --certificate-identity https://github.com/initializ/secure-images/.github/workflows/release.yml@refs/heads/main \
