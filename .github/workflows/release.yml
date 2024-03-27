@@ -28,7 +28,7 @@ jobs:
         id: apko
         uses: distroless/actions/apko-build@main
         with:
-          config: images/${{ inputs.image }}/apko.yaml
+          config: initializbuildpacks/${{ inputs.image }}/apko.yaml
           tag: ${{ inputs.image }}:latest
 
       - name: Save Docker image to tar file
