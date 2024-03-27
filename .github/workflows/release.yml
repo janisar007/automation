@@ -31,6 +31,10 @@ jobs:
           config: initializbuildpacks/${{ inputs.image }}/apko.yaml
           tag: initializbuildpacks/${{ inputs.image }}:latest
 
+      - name: Tag, and push docker image to Amazon ECR Public
+        run: |
+          docker load < output.tar
+
       - name: Check if Docker image exists locally
         run: |
           if docker images initializbuildpacks/${{ inputs.image }}:latest | grep -q initializbuildpacks/${{ inputs.image }}; then
