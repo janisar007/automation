@@ -37,7 +37,7 @@ jobs:
           REPOSITORY: ${{ inputs.image }}
         run: |
           docker tag initializbuildpacks/${{ inputs.image }}:latest initializbuildpacks/${{ inputs.image }}:latest
-          docker push iinitializbuildpacks/${{ inputs.image }}:latest
+          docker push initializbuildpacks/${{ inputs.image }}:latest
 
       - name: Install sigstore/cosign
         uses: sigstore/cosign-installer@v3.1.2
