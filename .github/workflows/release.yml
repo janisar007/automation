@@ -37,7 +37,7 @@ jobs:
 
       - name: Check if Docker image exists locally
         run: |
-          if docker images initializbuildpacks/${{ inputs.image }}:latest | grep -q initializbuildpacks/${{ inputs.image }}; then
+          if docker images initializbuildpacks/${{ inputs.image }}:latest-amd64 | grep -q initializbuildpacks/${{ inputs.image }}; then
             echo "Docker image initializbuildpacks/${{ inputs.image }}:latest found."
           else
             echo "Docker image initializbuildpacks/${{ inputs.image }}:latest not found. Please build the image first."
