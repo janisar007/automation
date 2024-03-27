@@ -49,7 +49,7 @@ jobs:
           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
           REPOSITORY: ${{ inputs.image }}
         run: |
-          docker tag initializbuildpacks/${{ inputs.image }}:latest initializbuildpacks/${{ inputs.image }}:latest
+          docker tag initializbuildpacks/${{ inputs.image }}:latest-amd64 initializbuildpacks/${{ inputs.image }}:latest
           docker push initializbuildpacks/${{ inputs.image }}:latest
 
       - name: Install sigstore/cosign
