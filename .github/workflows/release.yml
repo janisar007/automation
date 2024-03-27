@@ -6,13 +6,14 @@ on:
         required: true
         type: string
 
+permissions:
+  id-token: write  # This is required for GH OIDC connection
+  contents: read   # This is required for actions/checkout
+
 jobs:
   image-release:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash
-        working-directory: .
+
     steps:
       - name: Git checkout
         uses: actions/checkout@v3
@@ -20,8 +21,8 @@ jobs:
       - name: Login to Docker Hub
         uses: docker/login-action@v2
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Create & Push Minimal Image using apko
         id: apko
@@ -38,17 +39,21 @@ jobs:
           docker tag initializbuildpacks/$REPOSITORY:latest $DOCKERHUB_USERNAME/$REPOSITORY:latest
           docker push $DOCKERHUB_USERNAME/$REPOSITORY:latest
 
-      - uses: sigstore/cosign-installer@11086d25041f77fe8fe7b9ea4e48e3b9192b8f19 # v3.1.2
+      - name: Install sigstore/cosign
+        uses: sigstore/cosign-installer@v3.1.2
 
       - name: Sign and push Docker image
         env:
           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
           REPOSITORY: ${{ inputs.image }}
         run: |
+          cosign sign --key github/workflows/release.yml@refs/heads/main \
+            --certificate-oidc-issuer https://token.actions.githubusercontent.com \
+            initializbuildpacks/$REPOSITORY:latest
           docker push initializbuildpacks/$REPOSITORY:latest
 
       - name: Verify the pushed tags
-        run: | 
+        run: |
           cosign verify \
           initializbuildpacks/${{ inputs.image }}:latest \
           --certificate-identity https://github.com/initializ/secure-images/.github/workflows/release.yml@refs/heads/main \
