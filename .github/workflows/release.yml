@@ -36,8 +36,13 @@ jobs:
           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
           REPOSITORY: ${{ inputs.image }}
         run: |
-          docker tag initializbuildpacks/${{ inputs.image }}:latest initializbuildpacks/${{ inputs.image }}:latest
-          docker push initializbuildpacks/${{ inputs.image }}:latest
+          if docker images initializbuildpacks/${{ inputs.image }}:latest | grep -q initializbuildpacks/${{ inputs.image }}; then
+            docker tag initializbuildpacks/${{ inputs.image }}:latest $DOCKERHUB_USERNAME/${{ inputs.image }}:latest
+            docker push $DOCKERHUB_USERNAME/${{ inputs.image }}:latest
+          else
+            echo "Docker image initializbuildpacks/${{ inputs.image }}:latest not found. Please build the image first."
+            exit 1
+          fi
 
       - name: Install sigstore/cosign
         uses: sigstore/cosign-installer@v3.1.2
