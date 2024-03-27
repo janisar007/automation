@@ -30,6 +30,5 @@ jobs:
 
       - name: Build and Push Builder to Docker Hub
         run: |
-          pack builder create ${{ secrets.DOCKER_USERNAME }}/initializ-builder --config ./builder.toml
-          pack build ${{ secrets.DOCKER_USERNAME }}/initializ-builder --builder ${{ secrets.DOCKER_USERNAME }}/initializ-builder --no-cache
-          docker push ${{ secrets.DOCKER_USERNAME }}/initializ-builder:latest
+          pack builder create initializbuildpacks/initializ-builder:latest --config ./builder.toml
+          docker push initializbuildpacks/initializ-builder:latest

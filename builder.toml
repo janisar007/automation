@@ -94,7 +94,7 @@ Description  = "Initializ Distro base image with buildpacks for Go, NodeJS, Pyth
 
 # Base images used to create the builder
 [stack]
-  build-image = "public.ecr.aws/initializ/builder/build-image-labeled:latest"
+  build-image = "initializbuildpacks/build-image-labeled:latest"
   id = "Initializ Distroless Stack"
-  run-image = "public.ecr.aws/initializ/builder/run-image-labeled:latest"
+  run-image = "initializbuildpacks/run-image-labeled:latest"
   run-image-mirrors = []
