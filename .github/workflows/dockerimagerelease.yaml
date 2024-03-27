@@ -24,7 +24,7 @@ jobs:
       - name: Build  image
         run: |
           docker build -t initializbuildpacks/${{ inputs.image }}:latest -f initializbuildpacks/${{ inputs.image }}/Dockerfile .
-          docker tag images/${{ inputs.image }}:latest initializbuildpacks/${{ inputs.image }}:latest
+          docker tag initializbuildpacks/${{ inputs.image }}:latest initializbuildpacks/${{ inputs.image }}:latest
           
       - name: Tag and push Docker image to Docker Hub
         env:
