@@ -1,5 +1,5 @@
 # Define the base image
-FROM public.ecr.aws/initializ/builder/run-base:latest
+FROM initializbuildpacks/run-base:latest
 
 # Switch to the root user to install packages
 USER root
