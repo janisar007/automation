@@ -1,4 +1,4 @@
-description = "Initializ Distroless base image with buildpacks for Go, NodeJS, Python, Java, .NET Core, Apache HTTPD, NGINX and Procfile"
+description = "Initializ Distroless base image with buildpacks for Go, NodeJS, Python, Java, .NET Core, Apache HTTPD, NGINX and Procfi"
  
 [[buildpacks]]
   uri = "index.docker.io/initializbuildpacks/go@sha256:76f3e21b3c03e0912a561ccdc4526a69d0c8d1e6c09315f5fd4859137609b2d8"
