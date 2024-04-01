@@ -6,6 +6,7 @@ USER root
 
 # Update package database and install dependencies
 RUN apk update && \
+    apk del libcrypt1  && \
     apk add \
         build-base \
         ca-certificates-bundle \
@@ -29,22 +30,15 @@ RUN apk update && \
         python3-dev \
         libfontconfig1 \
         fontconfig \
+        libxcrypt \
         libxml2 \
         sqlite \
         pcre \
         libunwind \
-        icu \
         wolfi-base
 
-# Create symbolic link for libpcre.so.3
-#RUN ln -s /usr/lib/libpcre.so.1 /usr/lib/libpcre.so.3
-# Create symbolic link for libicuio.so.70
-#RUN ln -s /usr/lib/libicuio.so.74 /usr/lib/libicuio.so.70
-# Create symbolic link for libicui18n.so.70
-#RUN ln -s /usr/lib/libicui18n.so.74 /usr/lib/libicui18n.so.70
-# Create symbolic link for libicuuc.so.70
-#RUN ln -s /usr/lib/libicuuc.so.74 /usr/lib/libicuuc.so.70
-
+# Create symbolic link for libpcre
+RUN ln -s /usr/lib/libpcre.so.1 /usr/lib/libpcre.so.3
 
 # Switch back to the non-root user
 USER cnb
