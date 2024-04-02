@@ -1,5 +1,5 @@
 # Define the base image
-FROM public.ecr.aws/initializ/builder/build-base:latest
+FROM initializbuildpacks/build-base:latest
 
 # Switch to the root user to install packages
 USER root
@@ -8,7 +8,6 @@ USER root
 RUN apk update && \
     apk del libcrypt1  && \
     apk add \
-        build-base \
         ca-certificates-bundle \
         curl \
         git \
