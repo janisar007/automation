@@ -1,11 +1,12 @@
 # Define the base image
-FROM intzpython:build
+FROM public.ecr.aws/initializ/builder/build-base:latest
 
 # Switch to the root user to install packages
 USER root
 
 # Update package database and install dependencies
 RUN apk update && \
+    apk del libcrypt1  && \
     apk add \
         build-base \
         ca-certificates-bundle \
