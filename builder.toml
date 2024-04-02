@@ -1,4 +1,4 @@
-description = "Initializ Distroless base image with buildpacks for Go, NodeJS, Python, Java, .NET Core, Apache HTTPD, NGINX and "
+description = "Initializ Distroless base image with buildpacks for Go, NodeJS, Ruby, Java, .NET Core, Apache HTTPD, NGINX and Procfile"
  
 [[buildpacks]]
   uri = "index.docker.io/initializbuildpacks/go@sha256:76f3e21b3c03e0912a561ccdc4526a69d0c8d1e6c09315f5fd4859137609b2d8"
@@ -9,8 +9,8 @@ description = "Initializ Distroless base image with buildpacks for Go, NodeJS, P
   version = "2.2.4"
  
 [[buildpacks]]
-  uri = "index.docker.io/initializbuildpacks/python@sha256:271a0f00e921dccd76883dfe52b126bf02648b2125e1890e737cb83074bced43"
-  version = "4.0.3"
+  uri = "index.docker.io/initializbuildpacks/ruby@sha256:6a30026a1886c33a080bdacb5d0dec0af3e265402953c4ea97e8373f8849394d"
+  version = "1.0.0"
  
 [[buildpacks]]
   uri = "index.docker.io/initializbuildpacks/java@sha256:e43cd847b021674d30264a2aec731610bc8930feeb89e29e5b89adc239a34855"
@@ -47,8 +47,8 @@ description = "Initializ Distroless base image with buildpacks for Go, NodeJS, P
 [[order]]
  
   [[order.group]]
-    id = "initializ-buildpacks/python"
-    version = "4.0.3"
+    id = "initializ-buildpacks/ruby"
+    version = "1.0.0"
  
  
 [[order]]
