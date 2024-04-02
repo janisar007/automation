@@ -12,7 +12,7 @@ description = "Initializ Securepack for Python"
 
 # Base images used to create the builder
 [stack]
-  build-image = "pythonsecurepacks/build:1.0.0"
+  build-image = "initializbuildpacks/python-build-image-labeled:latest"
   id = "Initializ Distroless Stack"
-  run-image = "pythonsecurepacks/run:1.0.0"
+  run-image = "initializbuildpacks/python-run-image-labeled:latest"
   run-image-mirrors = []
