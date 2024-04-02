@@ -1,4 +1,4 @@
-description = "Initializ Securepack for Python"
+description = "Initializ Securepack for python"
 
 [[buildpacks]]
   uri = "index.docker.io/initializbuildpacks/python@sha256:271a0f00e921dccd76883dfe52b126bf02648b2125e1890e737cb83074bced43"
